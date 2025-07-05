@@ -1,0 +1,78 @@
+---
+title: Mediation
+---
+
+# Mediation
+
+## AppLovin MAX
+
+We support custom network waterfall mediation with AppLovin's MAX
+
+Please follow MAX [Docs](https://developers.axon.ai/en/max/mediated-network-guides/integrating-custom-sdk-networks/) and create the custom network adapter for LunaMedia
+
+Once everything on the dashboard is setup you can move on with the implementation on the application side.
+
+## Download
+
+To use the mediation you are required to download two libraries
+
+1. Download the Android SDK AAR Library from [Here](https://github.com/zach-luna/SDK-Dist/blob/main/LunaSDK.aar)
+2. Download the LunaMedia Android SDK Applovin Mediation Adapter from [Here](https://github.com/zach-luna/SDK-Dist/blob/main/LunaAdapter.aar)
+
+## Installation
+
+1. Copy .aar's to libs/ Folder
+
+```
+your-app/
+├── libs/
+    └── LunaSDK.aar
+    └── LunaAdapter.aar
+
+```
+
+2. Update build.gradle in the module (usually app/build.gradle):
+
+```
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation(name: 'LunaSDK', ext: 'aar')
+    implementation(name: 'LunaAdapter', ext: 'aar')
+}
+```
+
+3. Add required dependencies in the module (usually app/build.gradle) for LunaSDK to work:
+
+```
+dependencies {
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+}
+```
+
+4. In your module app/build.gradle also add these plugins:
+
+```
+plugins {
+    id("kotlin-kapt")
+    kotlin("kapt")
+    id("com.google.devtools.ksp")
+}
+```
+
+5. rebuild your project
+
+## Usage
+
+Upon successful installation, AppLovin should be able to pick up the SDK and use it according to the waterfall settings on the dashboard.
+
+## Test Mode
+
+Custom network can't work on Simulators only real devices and Test Mode has to be off, read more [Here](https://developers.axon.ai/en/max/mediated-network-guides/integrating-custom-sdk-networks/)

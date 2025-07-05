@@ -1,0 +1,197 @@
+---
+title: Show Ad
+---
+
+# Show Ad
+
+## Banner
+
+The SDK currently supports only banner view of size `320x50` which being served from our backend.
+
+In order to load and show a Banner you need to use the `LunaMediaBanner` class.
+
+The banner view needs to be set in the layout.xml of your view using the dedicated element:
+
+```
+<io.lunamedia.lunasdk.ads.LunaMediaBanner
+    android:id="@+id/banner_image"
+    android:layout_width="320dp"
+    android:layout_height="50dp"
+/>
+```
+
+In your activity create and refer to the view by its ID:
+
+```
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var lunaBannerView: LunaMediaBanner
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lunaBannerView = findViewById(R.id.banner_image)
+    }
+}
+```
+
+The next step would be loading an ad using the method `load(placmentId: string)`
+
+```
+lunaBannerView.load("PLACEMENT_ID")
+```
+
+Replace "PLACEMENT_ID" with your placement id
+
+If there's a placement id with this id and every thing is set properly you should see a banner being loaded.
+
+## Listener
+
+The banner ad view also allows to implements a listener that will call methods to reflect the actions of the banner and its lifecycle.
+
+### Listener methods
+
+All the methods returns the Banner Ad View instance as the first parameter.
+
+---
+
+1. `onAdFetchFailed` - Called when there was issue with ad request
+
+```
+override fun onAdFetchFailed(ad: LunaMediaBanner, requestStatus: LunaMediaAdRequestStatus) {
+   super.onAdFetchFailed(ad, requestStatus)
+   log("Ad fetch failed: $requestStatus")
+}
+```
+
+`LunaMediaAdRequestStatus` - List of statuses or errors
+
+```
+NO_ERROR,
+
+NETWORK_UNREACHABLE,
+
+NO_FILL,
+
+REQUEST_INVALID,
+
+REQUEST_PENDING,
+
+REQUEST_TIMED_OUT,
+
+INTERNAL_ERROR,
+
+SERVER_ERROR,
+
+AD_ACTIVE,
+
+EARLY_REFRESH_REQUEST,
+
+AD_NO_LONGER_AVAILABLE,
+
+MISSING_REQUIRED_DEPENDENCIES,
+
+REPETITIVE_LOAD,
+
+GDPR_COMPLIANCE_ENFORCED,
+
+GET_SIGNALS_CALLED_WHILE_LOADING,
+
+LOAD_WITH_RESPONSE_CALLED_WHILE_LOADING,
+
+INVALID_RESPONSE_IN_LOAD,
+
+MONETIZATION_DISABLED,
+
+CALLED_FROM_WRONG_THREAD,
+
+CONFIGURATION_ERROR,
+
+LOW_MEMORY;
+```
+
+---
+
+2. `onAdDisplayed` - Called when the image from the ad was drawn on the screen aka impression
+
+```
+override fun onAdFetchFailed(ad: LunaMediaBanner, requestStatus: LunaMediaAdRequestStatus) {
+   super.onAdFetchFailed(ad, requestStatus)
+   log("Ad fetch failed: $requestStatus")
+}
+```
+
+3. `onAdDismissed` - Means the ad isn't visible to the user anymore
+
+```
+override fun onAdDismissed(ad: LunaMediaBanner) {
+    super.onAdDismissed(ad)
+    log("Ad dismissed")
+}
+```
+
+4. `onUserLeftApplication` - User left app from ad
+
+```
+override fun onUserLeftApplication(ad: LunaMediaBanner) {
+    super.onUserLeftApplication(ad)
+    log("User left app from ad")
+}
+```
+
+5. `onRewardsUnlocked` - Means the user watched the required time or performed the required action to unlock the rewards
+
+```
+override fun onRewardsUnlocked(ad: LunaMediaBanner, rewards: Map<Any, Any>) {
+    super.onRewardsUnlocked(ad, rewards)
+    log("Rewards unlocked: $rewards")
+}
+```
+
+5. `onAddClicked` - User interacted with the ad
+
+```
+override fun onAdClicked(ad: LunaMediaBanner, data: Map<*, *>) {
+    super.onAdClicked(ad, data)
+    log("Ad clicked with data: $data")
+}
+```
+
+---
+
+### Implement Listener
+
+In order to implement the listener call the `setListener(listener: BannerAdEventListener)`
+
+```
+lunaBannerView.setListener(object : BannerAdEventListener() {
+    override fun onAdFetchFailed(ad: LunaMediaBanner, requestStatus: LunaMediaAdRequestStatus) {
+        super.onAdFetchFailed(ad, requestStatus)
+        log("Ad fetch failed: $requestStatus")
+    }
+
+    override fun onAdDisplayed(ad: LunaMediaBanner) {
+        super.onAdDisplayed(ad)
+        log("Ad displayed")
+    }
+
+    override fun onAdDismissed(ad: LunaMediaBanner) {
+        super.onAdDismissed(ad)
+        log("Ad dismissed")
+    }
+
+    override fun onUserLeftApplication(ad: LunaMediaBanner) {
+        super.onUserLeftApplication(ad)
+        log("User left app from ad")
+    }
+
+    override fun onRewardsUnlocked(ad: LunaMediaBanner, rewards: Map<Any, Any>) {
+        super.onRewardsUnlocked(ad, rewards)
+        log("Rewards unlocked: $rewards")
+    }
+
+    override fun onAdClicked(ad: LunaMediaBanner, data: Map<*, *>) {
+        super.onAdClicked(ad, data)
+        log("Ad clicked with data: $data")
+    }
+})
+```

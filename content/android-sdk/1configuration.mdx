@@ -1,0 +1,44 @@
+---
+title: Configuration
+---
+
+# Configuration
+
+## Init the sdk
+
+In order to use the sdk you need to initialize it
+
+Start by importing the library
+
+```
+import io.lunamedia.lunasdk.LunaSDK
+```
+
+The SDK main class is a singleton thread safe instance you can call, to init call
+
+```
+LunaSDK.init()
+```
+
+The init function accepts 2 parameters:
+`context: Context` and `listener: SdkInitializationListener`
+
+the listener will invoke methods according to the SDK status and allow to implement a method `onInitializationComplete` which will be called when the sdk finish init and return either error or success.
+
+See implementation of sdk init and implementing the listener:
+
+```
+LunaSDK.init(this, object : SdkInitializationListener {
+    override fun onInitializationComplete(error: Error?) {
+        runOnUiThread {
+            if (error == null) {
+                log("LunaMedia SDK successfully initialized.")
+            } else {
+                log("LunaMedia SDK initialization failed with error: " + error.message)
+            }
+        }
+    }
+})
+```
+
+Once the success is being called the SDK is ready to load ads.
